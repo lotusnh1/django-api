@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'books'
 ]
-##this is for test
+##this is for test2
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
