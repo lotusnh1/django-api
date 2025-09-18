@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: django-api
-        image: ghcr.io/lotusnh1/chat-microservice-account:latest
+        image: ghcr.io/lotusnh1/django-api:latest
         ports:
         - containerPort: 8000
         imagePullPolicy: Always
