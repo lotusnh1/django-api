@@ -1,0 +1,23 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django-api
+  template:
+    metadata:
+      labels:
+        app: django-api
+    spec:
+      containers:
+      - name: django-api
+        image: ghcr.io/lotusnh1/chat-microservice-account:latest
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: Always
+      imagePullSecrets:
+      - name: ghcr-secret
