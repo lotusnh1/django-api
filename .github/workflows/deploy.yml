@@ -39,6 +39,7 @@ jobs:
       run: |
         mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
+        sed -i 's/127.0.0.1:16443/192.168.43.252:16443/g' $HOME/.kube/config
 
     - name: Verify kubectl connection
       run: |
