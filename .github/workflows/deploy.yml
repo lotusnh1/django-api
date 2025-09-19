@@ -29,24 +29,20 @@ jobs:
         push: true
         tags: ghcr.io/${{ github.repository_owner }}/django-api:latest
 
-    - name: Install kubectl
-      run: |
-        curl -LO "https://dl.k8s.io/release/v1.24.0/bin/linux/amd64/kubectl"
-        chmod +x ./kubectl
-        sudo mv ./kubectl /usr/local/bin/kubectl
-
     - name: Set up Kubeconfig
       run: |
-        mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
-        sed -i 's/127.0.0.1:16443/192.168.43.252:16443/g' $HOME/.kube/config
+        # Debugging - Check if kubeconfig is properly decoded
+        cat $HOME/.kube/config
 
-    - name: Verify kubectl connection
+    - name: Update Kubeconfig with External IP
       run: |
-        kubectl config view
-        kubectl get nodes
+        EXTERNAL_IP=$(curl -s http://icanhazip.com)  # Get your external IP
+        sed -i "s|https://127.0.0.1:16443|https://${EXTERNAL_IP}:16443|" $HOME/.kube/config
+        cat $HOME/.kube/config  # Debugging step, check if it's correct
 
     - name: Deploy to MicroK8s
       run: |
+        kubectl get nodes  # Test if kubectl can access the cluster
         kubectl apply -f k8s/deployment.yaml
         kubectl apply -f k8s/service.yaml
