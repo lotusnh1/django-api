@@ -31,6 +31,7 @@ jobs:
 
     - name: Set up Kubeconfig
       run: |
+        mkdir -p $HOME/.kube  # Ensure the .kube directory exists
         echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
         # Debugging - Check if kubeconfig is properly decoded
         cat $HOME/.kube/config
