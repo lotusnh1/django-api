@@ -1,3 +1,32 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: books-api
+#   labels:
+#     app: books-api
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: books-api
+#   template:
+#     metadata:
+#       labels:
+#         app: books-api
+#     spec:
+#       containers:
+#         - name: books-api
+#           image: ghcr.io/lotusnh1/django-api:latest
+#           imagePullPolicy : Always
+#           command: ["/app/entrypoint.sh"]
+#           ports:
+#             - containerPort: 8000  # This is the internal container port
+#           envFrom:
+#             - configMapRef:
+#                 name: books-api-env
+#       # Uncomment this section if you're pulling the image from a private registry
+#       # imagePullSecrets:
+#       #   - name: ghcr-secret
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,6 +38,11 @@ spec:
   selector:
     matchLabels:
       app: books-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -17,13 +51,26 @@ spec:
       containers:
         - name: books-api
           image: ghcr.io/lotusnh1/django-api:latest
+          imagePullPolicy: Always
           command: ["/app/entrypoint.sh"]
           ports:
-            - containerPort: 8000  # This is the internal container port
+            - containerPort: 8000
           envFrom:
             - configMapRef:
                 name: books-api-env
-      # Uncomment this section if you're pulling the image from a private registry
-      # imagePullSecrets:
-      #   - name: ghcr-secret
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 5
+
 
