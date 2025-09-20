@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: books-api-env
+data:
+  DEBUG: "1"
+  DJANGO_SECRET_KEY: "changeme-secret"
+  # Other environment variables as needed

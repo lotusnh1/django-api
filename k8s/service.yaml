@@ -1,1 +1,13 @@
-t
+apiVersion: v1
+kind: Service
+metadata:
+  name: books-api
+spec:
+  selector:
+    app: books-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      nodePort : 30007 
+  type: NodePort  # Can change to LoadBalancer or NodePort as needed

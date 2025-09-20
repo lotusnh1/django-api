@@ -19,7 +19,7 @@ load_dotenv()
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False')
 
-ALLOWED_HOSTS = []##n ew test3
+ALLOWED_HOSTS = ['*']##n ew test3
 
 
 # Application definition

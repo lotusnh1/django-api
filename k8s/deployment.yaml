@@ -1,23 +1,29 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django-api
+  name: books-api
+  labels:
+    app: books-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: django-api
+      app: books-api
   template:
     metadata:
       labels:
-        app: django-api
+        app: books-api
     spec:
       containers:
-      - name: django-api
-        image: ghcr.io/lotusnh1/django-api:latest
-        ports:
-        - containerPort: 8000
-        imagePullPolicy: Always
-      imagePullSecrets:
-      - name: ghcr-secret
+        - name: books-api
+          image: ghcr.io/lotusnh1/django-api:latest
+          command: ["/app/entrypoint.sh"]
+          ports:
+            - containerPort: 8000  # This is the internal container port
+          envFrom:
+            - configMapRef:
+                name: books-api-env
+      # Uncomment this section if you're pulling the image from a private registry
+      # imagePullSecrets:
+      #   - name: ghcr-secret
+
