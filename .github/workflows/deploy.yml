@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Load environment variables if needed in steps
-      DJANGO_SETTINGS_MODULE: myproject.settings
+      DJANGO_SETTINGS_MODULE: book_api.settings
       # You can also load secrets here if needed
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
