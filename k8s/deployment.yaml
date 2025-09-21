@@ -41,8 +41,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
+      maxUnavailable: 1  # Only 1 pod can be unavailable during updates
+      maxSurge: 1         # Only 1 new pod can be created above desired replicas during updates
   template:
     metadata:
       labels:
@@ -50,8 +50,8 @@ spec:
     spec:
       containers:
         - name: books-api
-          image: ghcr.io/lotusnh1/django-api:latest
-          imagePullPolicy: Always
+          image: ghcr.io/lotusnh1/django-api:latest # Use a stable tag like v1.2.3 or a SHA
+          imagePullPolicy: Always  # Ensure image is always pulled from the registry
           command: ["/app/entrypoint.sh"]
           ports:
             - containerPort: 8000
@@ -62,15 +62,15 @@ spec:
             httpGet:
               path: /healthz
               port: 8000
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            failureThreshold: 3
+            initialDelaySeconds: 10   # Delay before the first check
+            periodSeconds: 5         # Interval between checks
+            failureThreshold: 3       # Fail the pod after 3 unsuccessful checks
+            successThreshold: 1       # Pod is considered ready after 1 successful check
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8000
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            failureThreshold: 5
-
-
+            initialDelaySeconds: 15   # Delay before the first check
+            periodSeconds: 10         # Interval between checks
+            failureThreshold: 5       # Pod will be restarted after 5 failures
+            successThreshold: 1       # Pod is considered alive after 1 successful check
